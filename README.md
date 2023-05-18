@@ -4,7 +4,7 @@ Master's thesis in economics by Thomas Mejlhede Jensen
 
 Copenhagen University
 
-Supervisor: Johannes Wolfhart
+Supervisor: Johannes Wolhfart
 
 Submitted on 31/05/2023
 
