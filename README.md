@@ -4,23 +4,23 @@ Master's thesis in economics by Thomas Mejlhede Jensen
 
 Copenhagen University
 
-Supervisor: Johannes Wolhfart
+Supervisor: Johannes Wohlfart
 
 Submitted on 31/05/2023
 
 ## Script Overview:
-**Thesis Data Manipulation and Figures.R**
+**Script Data & Figures.R**
 
 This (R script) uses the raw data from the DHS and the SCE to create the panel datafiles that are used for regressions.
 Furthermore, it creates all figures presented in the thesis.
 
-**Thesis Tables.do**
+**Script Tables.do**
 
 This (STATA dofile) uses the panels datafiles created with the R script to perform all regressions and create all tables presented in the thesis.
 
 ## Data Overview:
 ### DHS data:
-Not available for public download. Request it from https://www.centerdata.nl/
+Not available for public download. Can be requested for reserach purposes from https://www.centerdata.nl/
 
 ### SCE data:
 
