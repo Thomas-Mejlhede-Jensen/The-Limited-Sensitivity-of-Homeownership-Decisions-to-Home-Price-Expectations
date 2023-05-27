@@ -24,8 +24,6 @@ Not available for public download. Can be requested for reserach purposes from h
 
 ### SCE data:
 
-Downloaded from https://www.newyorkfed.org/microeconomics/sce#/
-
 **FRBNY-SCE-Housing-Survey-Public-Microdata-Complete.xlsx**
 
 **frbny-sce-public-microdata-latest.rar (.xlsx file)**
@@ -33,6 +31,8 @@ Downloaded from https://www.newyorkfed.org/microeconomics/sce#/
 **FRBNY-SCE-Public-Microdata-Complete-17-19.rar** (saved as .xlb due to large size, convert to .xlsx to replicate analysis)
 
 **FRBNY-SCE-Public-Microdata-Complete-13-16.rar** (saved as .xlb due to large size, convert to .xlsx to replicate analysis)
+
+Source: https://www.newyorkfed.org/microeconomics/sce#/
 
 
 ### Additional data:
