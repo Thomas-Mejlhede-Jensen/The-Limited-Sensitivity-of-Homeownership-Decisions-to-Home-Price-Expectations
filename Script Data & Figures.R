@@ -26,6 +26,7 @@ library("writexl") #For writing excel files
 library("lubridate") #For working with dates
 library("devEMF") #For exporting plots as  emf files
 library("scales") #For plotting axis text with .1 accuracy
+library("showtext") #For importing custom fonts (I use the LM Roman 12 font which needs to be downloaded separately)
 
 #set directories
 dataDHS <- "C:/Users/thom0/Desktop/Thomas Stuff/Polit KU/Speciale/Programmering/Data DHS"
@@ -1060,11 +1061,8 @@ write_xlsx(SCE_corona, "SCE_corona.xlsx")
 ####################################################################
 
 #Read SCE and DHS panels
-#OPTINAL
-#Clear all in environment (so code below can be run individually) 
-#(have to set wd's and laod packages afterwards)
-# rm(list = ls())
 
+#for running individually
 setwd(output)
 DHS <- read_excel("DHS_move_corona.xlsx")
 SCE <- read_excel("SCE_corona.xlsx")
@@ -1076,13 +1074,21 @@ SCE_temp <- SCE %>%
   select(sale_prob, exp_home_price_point_w, exp_1y_mortgage_rate_w, percieved_mortgage_rate_w)
 
 ##############################  Set theme for plots
+#import LM Roman 12 using "showtext"
+font_add("lmroman12", "C:/Users/thom0/Desktop/Thomas Stuff/Polit KU/Speciale/Programmering/Font/lmroman12-regular.ttf") 
+#Activate the font
+showtext_auto()
+
+#this font is Open Source Latin Modern Roman 12 font, downloaded from http://www.gust.org.pl/
+#It needs to be saved as a .ttf instead of a .otf file to work properly
+
 # theme_master_2() depends on theme_master()
-theme_master_2=function(base_size = 10.5, base_family = "",base_line_size = base_size / 22,base_rect_size = base_size / 22)
+theme_master_2=function(base_size = 12, base_family = "",base_line_size = base_size / 22,base_rect_size = base_size / 22)
 {
-  theme_master()+theme(plot.title = element_text(family="Times New Roman",size=10.5),
+  theme_master()+theme(plot.title = element_text(family="lmroman12",size=10.5),
                        legend.text = element_text(margin=margin(l=-3)))
 }
-theme_master <- function(base_size = 10.5, base_family = "",base_line_size = base_size / 22,base_rect_size = base_size / 22) 
+theme_master <- function(base_size = 12, base_family = "",base_line_size = base_size / 22,base_rect_size = base_size / 22) 
 {
   theme_bw(
     base_size = base_size,
@@ -1098,20 +1104,20 @@ theme_master <- function(base_size = 10.5, base_family = "",base_line_size = bas
       panel.grid.major.x = element_blank(),
       # show axes
       axis.line      = element_line(colour = "black", size = .1),
-      axis.title.x = element_text(size=base_size, family="Times New Roman", angle = 0, margin = margin(t = 5, r = 0, b = 0, l = 0)),
-      axis.text.y = element_text(size=base_size, family="Times New Roman", color="black", angle=0, margin = margin(t = 0, r = 2, b = 0, l = 0)),
-      axis.text.x = element_text(size=base_size, family="Times New Roman", color="black", angle=0, margin = margin(t = 2, r = 0, b = 0, l = 0)),
+      axis.title.x = element_text(size=base_size, family="lmroman12", angle = 0, margin = margin(t = 5, r = 0, b = 0, l = 0)),
+      axis.text.y = element_text(size=base_size, family="lmroman12", color="black", angle=0, margin = margin(t = 0, r = 2, b = 0, l = 0)),
+      axis.text.x = element_text(size=base_size, family="lmroman12", color="black", angle=0, margin = margin(t = 2, r = 0, b = 0, l = 0)),
       plot.title.position = "plot", 
       plot.tag.position = c(1,0.99),
-      plot.tag = element_text(size=9,family="Times New Roman",hjust=1),
+      plot.tag = element_text(size=9,family="lmroman12",hjust=1),
       axis.ticks =  element_line( size=.1, color="black"),
       legend.key       = element_blank(),
-      legend.title=element_text(size=base_size, family="Times New Roman"), 
-      legend.text=element_text(size=base_size, family="Times New Roman"),
+      legend.title=element_text(size=base_size, family="lmroman12"), 
+      legend.text=element_text(size=base_size, family="lmroman12"),
       # simple, black and white strips
       strip.background = element_rect(fill = "white", colour = "black", size = rel(2)),
       # NB: size is 1 but clipped, it looks like the 0.5 of the axes
-      text=element_text(size=9, family="Times New Roman"),
+      text=element_text(size=base_size, family="lmroman12"),
       complete = TRUE
     )
 }
@@ -1126,13 +1132,14 @@ NL_HP_Move <- DHS %>%
 Figure_1=ggplot(data=NL_HP_Move) + 
   geom_bar(aes(x=year, y=HP, group=1, fill="Prior Expected\n1Y Home Price Growth"), stat = "identity",
            position = position_stack(reverse = TRUE),width=0.5, color = "black", size=0.2) +
-  geom_line(aes(x=year, y=share_move, group=1, color="Share of Respondents\nwho Transition to Renting"), size=1.1) +
+  geom_line(aes(x=year, y=share_move, group=1, color="Share of Respondents Who\nTransition to Renting"), size=1.1) +
   theme_master_2() + 
   theme(legend.position = "bottom", 
         axis.title.x = element_blank(),
         plot.title = element_text(hjust = 0.4),
         legend.title = element_blank(),
         axis.text.x = element_text(angle = 45, hjust = 0.7), #angeled x-axis text
+        legend.text = element_text(lineheight = 1.2) # increase line height to create more space between lines
   )  +
   ylab("Percent")+
   guides(color = guide_legend(order = 2, keywidth = unit(0.6, 'cm')), fill = guide_legend(order = 1)) + #For at f? legend med "Ansatte.." f?rst.
@@ -1142,7 +1149,8 @@ Figure_1=ggplot(data=NL_HP_Move) +
                      limits = c(-2, 2.5), 
                      breaks = seq(-2, 2.5, by=0.5)) +
   scale_x_continuous(limits=c(2004.5, 2022.5), breaks=seq(2004, 2022, by=1), 
-                     expand=expansion(add=c(0.01, 0.01)))
+                     expand=expansion(add=c(0.01, 0.01)))+
+  geom_hline(yintercept = -2, color = "black", linetype = "solid", size = .1)  #remove grid line at x-axis
 Figure_1
 
 # ------------------------------- Figure 2 – Expected Home Price Growth, Point Prediction & Mean of Bin Prediction
@@ -1158,7 +1166,7 @@ Figure_2 <-  ggplot(data = SCE_bin, aes(x = avg_x, y = avg_y)) +
   geom_abline(slope = lm(SCE_bin$avg_y ~ SCE_bin$avg_x)$coefficients[2], 
               intercept = lm(SCE_bin$avg_y ~ SCE_bin$avg_x)$coefficients[1], 
               color = "#2171b5", size=1.1) +
-  geom_point(color="#000000", shape=19) + 
+  geom_point(color="#000000", shape=19, size=3.5) + 
   theme_master_2() + 
   theme(legend.position = "none")  +
   ylab("Expected Home Price Growth (Point Prediction)")+
@@ -1209,6 +1217,8 @@ Figure_3_A <- ggplot(NL_HP_expectations, aes(x = year)) +
   guides(color = guide_legend(nrow = 2, title.position = "top",
                               override.aes = list(linetype = c("solid", "dashed", "solid", "dashed")))) +
   theme(legend.position = "bottom", 
+        legend.spacing.x = unit(0.8, "cm"),  # Increase the distance between legend columns
+        legend.key.height = unit(0.8, "cm"),  # Increase the height of the legend keys
         axis.title.x = element_blank(),
         plot.title = element_text(hjust = 0.4),
         legend.title = element_blank(),
@@ -1273,6 +1283,8 @@ Figure_3_B <- ggplot(US_HP_expectations, aes(x = year)) +
   guides(color = guide_legend(nrow = 2, title.position = "top",
                               override.aes = list(linetype = c("solid", "dashed", "solid", "dashed")))) +
   theme(legend.position = "bottom", 
+        legend.spacing.x = unit(0.8, "cm"),  # Increase the distance between legend columns
+        legend.key.height = unit(0.8, "cm"),  # Increase the height of the legend keys
         axis.title.x = element_blank(),
         plot.title = element_text(hjust = 0.4),
         legend.title = element_blank(),
@@ -1373,6 +1385,8 @@ Figure_A1_A <- ggplot(NL_MR_expectations, aes(x = year)) +
   guides(color = guide_legend(nrow = 2, title.position = "top",
                               override.aes = list(linetype = c("solid", "dashed", "solid", "dashed")))) +
   theme(legend.position = "bottom",
+        legend.spacing.x = unit(0.8, "cm"),  # Increase the distance between legend columns
+        legend.key.height = unit(0.8, "cm"),  # Increase the height of the legend keys
         axis.title.x = element_blank(),
         plot.title = element_text(hjust = 0.4),
         legend.margin = margin(l = -10),
@@ -1439,6 +1453,8 @@ Figure_A1_B <- ggplot(US_MR_expectations, aes(x = year)) +
   guides(color = guide_legend(nrow = 2, title.position = "top",
                               override.aes = list(linetype = c("solid", "dashed", "solid", "dashed")))) +
   theme(legend.position = "bottom", 
+        legend.spacing.x = unit(0.8, "cm"),  # Increase the distance between legend columns
+        legend.key.height = unit(0.8, "cm"),  # Increase the height of the legend keys
         axis.title.x = element_blank(),
         plot.title = element_text(hjust = 0.4),
         legend.margin = margin(l = -10),
@@ -1500,39 +1516,41 @@ Figure_A2_B <- ggplot() +
                      labels = c("<=-10", -8, -6, -4, -2, 0, 2, 4, 6, 8, ">=10")) 
 Figure_A2_B
 
-#Export figures (As .emf files)      
+#Export figures (As .png files)      
 setwd(outputPlots)
-emf("Figure_1.emf", width = 4.725, height = 4.05)
+
+png("Figure_1.png", width = 600, height = 500)
 Figure_1
 dev.off()
-emf("Figure_2.emf", width = 4.725, height = 4.05)
+png("Figure_2.png", width = 600, height = 500)
 Figure_2
 dev.off()
-emf("Figure_3_A.emf", width = 4.725, height = 4.05)
+png("Figure_3_A.png", width = 600, height = 500)
 Figure_3_A
 dev.off()
-emf("Figure_3_B.emf", width = 4.725, height = 4.05)
+png("Figure_3_B.png", width = 600, height = 500)
 Figure_3_B
 dev.off()
-emf("Figure_4_A.emf", width = 4.725, height = 4.05)
+png("Figure_4_A.png", width = 600, height = 500)
 Figure_4_A
 dev.off()
-emf("Figure_4_B.emf", width = 4.725, height = 4.05)
+png("Figure_4_B.png", width = 600, height = 500)
 Figure_4_B
 dev.off()
 
-emf("Figure_A1_A.emf", width = 4.725, height = 4.05)
+png("Figure_A1_A.png", width = 600, height = 500)
 Figure_A1_A
 dev.off()
-emf("Figure_A1_B.emf", width = 4.725, height = 4.05)
+png("Figure_A1_B.png", width = 600, height = 500)
 Figure_A1_B
 dev.off()
-emf("Figure_A2_A.emf", width = 4.725, height = 4.05)
+png("Figure_A2_A.png", width = 600, height = 500)
 Figure_A2_A
 dev.off()
-emf("Figure_A2_B.emf", width = 4.725, height = 4.05)
+png("Figure_A2_B.png", width = 600, height = 500)
 Figure_A2_B
 dev.off()
+
 
 
 ####################################################################
